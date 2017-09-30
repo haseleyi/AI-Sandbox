@@ -104,7 +104,7 @@ public abstract class Strategy {
 
 		@Override
 		public Node getAndRemoveLeaf() {
-			Node n = frontier.pop();
+			Node n = frontier.pollLast();
 			frontierSet.remove(n);
 			return n;
 		}
