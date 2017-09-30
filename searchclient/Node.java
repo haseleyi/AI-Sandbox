@@ -23,13 +23,13 @@ public class Node {
 	// Row 2: (2,0) (2,1) (2,2) (2,3) ...
 	// ...
 	// (Start in the top left corner, first go down, then go right)
-	// E.g. this.walls[2] is an array of booleans having size MAX_COL.
-	// this.walls[row][col] is true if there's a wall at (row, col)
+	// E.g. Node.walls[2] is an array of booleans having size MAX_COL.
+	// Node.walls[row][col] is true if there's a wall at (row, col)
 	//
 
-	public boolean[][] walls = new boolean[MAX_ROW][MAX_COL];
+	public static boolean[][] walls = new boolean[MAX_ROW][MAX_COL];
 	public char[][] boxes = new char[MAX_ROW][MAX_COL];
-	public char[][] goals = new char[MAX_ROW][MAX_COL];
+	public static char[][] goals = new char[MAX_ROW][MAX_COL];
 
 	public Node parent;
 	public Command action;
@@ -41,6 +41,7 @@ public class Node {
 	public Node(Node parent) {
 		this.parent = parent;
 		if (parent == null) {
+			
 			this.g = 0;
 		} else {
 			this.g = parent.g() + 1;
@@ -123,7 +124,7 @@ public class Node {
 	}
 
 	private boolean cellIsFree(int row, int col) {
-		return !this.walls[row][col] && this.boxes[row][col] == 0;
+		return !Node.walls[row][col] && this.boxes[row][col] == 0;
 	}
 
 	private boolean boxAt(int row, int col) {
@@ -133,9 +134,9 @@ public class Node {
 	private Node ChildNode() {
 		Node copy = new Node(this);
 		for (int row = 0; row < MAX_ROW; row++) {
-			System.arraycopy(this.walls[row], 0, copy.walls[row], 0, MAX_COL);
+			System.arraycopy(Node.walls[row], 0, copy.walls[row], 0, MAX_COL);
 			System.arraycopy(this.boxes[row], 0, copy.boxes[row], 0, MAX_COL);
-			System.arraycopy(this.goals[row], 0, copy.goals[row], 0, MAX_COL);
+			System.arraycopy(Node.goals[row], 0, copy.goals[row], 0, MAX_COL);
 		}
 		return copy;
 	}
@@ -158,8 +159,8 @@ public class Node {
 			result = prime * result + this.agentCol;
 			result = prime * result + this.agentRow;
 			result = prime * result + Arrays.deepHashCode(this.boxes);
-			result = prime * result + Arrays.deepHashCode(this.goals);
-			result = prime * result + Arrays.deepHashCode(this.walls);
+			result = prime * result + Arrays.deepHashCode(Node.goals);
+			result = prime * result + Arrays.deepHashCode(Node.walls);
 			this._hash = result;
 		}
 		return this._hash;
@@ -178,9 +179,9 @@ public class Node {
 			return false;
 		if (!Arrays.deepEquals(this.boxes, other.boxes))
 			return false;
-		if (!Arrays.deepEquals(this.goals, other.goals))
+		if (!Arrays.deepEquals(Node.goals, other.goals))
 			return false;
-		if (!Arrays.deepEquals(this.walls, other.walls))
+		if (!Arrays.deepEquals(Node.walls, other.walls))
 			return false;
 		return true;
 	}
@@ -189,15 +190,15 @@ public class Node {
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		for (int row = 0; row < MAX_ROW; row++) {
-			if (!this.walls[row][0]) {
+			if (!Node.walls[row][0]) {
 				break;
 			}
 			for (int col = 0; col < MAX_COL; col++) {
 				if (this.boxes[row][col] > 0) {
 					s.append(this.boxes[row][col]);
-				} else if (this.goals[row][col] > 0) {
-					s.append(this.goals[row][col]);
-				} else if (this.walls[row][col]) {
+				} else if (Node.goals[row][col] > 0) {
+					s.append(Node.goals[row][col]);
+				} else if (Node.walls[row][col]) {
 					s.append("+");
 				} else if (row == this.agentRow && col == this.agentCol) {
 					s.append("0");
