@@ -21,10 +21,12 @@ public class SearchClient {
 		}
 
 		int row = 0;
+		int cols = 0;
 		boolean agentFound = false;
 		this.initialState = new Node(null);
 
 		while (!line.equals("")) {
+			cols = Math.max(cols, line.length());
 			for (int col = 0; col < line.length(); col++) {
 				char chr = line.charAt(col);
 
@@ -52,6 +54,8 @@ public class SearchClient {
 			line = serverMessages.readLine();
 			row++;
 		}
+		Node.MAX_ROW = row;
+		Node.MAX_COL = cols;
 	}
 
 	public LinkedList<Node> Search(Strategy strategy) throws IOException {
