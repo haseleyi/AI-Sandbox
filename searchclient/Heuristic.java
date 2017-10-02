@@ -12,6 +12,11 @@ public class Pair<F, S> {
         this.first = first;
         this.second = second;
     }
+
+    @Override
+    public boolean equals(Pair other){
+    	return other.first == first && other.second == second;
+    }
 }
 
 public abstract class Heuristic implements Comparator<Node> {
