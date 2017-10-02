@@ -4,13 +4,51 @@ import java.util.Comparator;
 
 import searchclient.NotImplementedException;
 
+public class Pair<F, S> {
+    public final F first;
+    public final S second;
+
+    public Pair(F first, S second) {
+        this.first = first;
+        this.second = second;
+    }
+}
+
 public abstract class Heuristic implements Comparator<Node> {
 	public Heuristic(Node initialState) {
 		// Here's a chance to pre-process the static parts of the level.
 	}
 
 	public int h(Node n) {
-		throw new NotImplementedException();
+		// throw new NotImplementedException();
+		// compare columns away
+		Stack<Pair<char,Integer>> goals = new Stack<Pair<char,Integer>>();
+		ArrayList<Pair<char,Integer>> boxes = new ArrayList<Pair<char,Integer>>();
+		for (int r : new Range(Node.MAX_ROW)){
+			for (int c: new Range(Node.MAX_COL)){
+				if (n.boxes[r][c] != 0){
+					boxes.add(new Pair<char,Integer>(n.boxes[r][c],c));
+				}
+				if (n.goals[r][c] != 0){
+					goals.push(new Pair<char,Integer>(n.goals[r][c],c));
+				}
+			}
+		}
+
+		int total = 0;
+		while (!goals.isEmpty()){
+			Pair<char,Integer> g = goals.pop();
+			char c = g.first;
+			int col = g.second;
+
+			for (Pair<char,Integer> box: boxes){
+				if (Character.toLowerCase(box.first) == c){
+					total+= Math.abs(box.second-col);
+					boxes.remove(box);
+					break;
+				}
+			}
+		}
 	}
 
 	public abstract int f(Node n);
