@@ -27,26 +27,28 @@ public abstract class Heuristic implements Comparator<Node> {
 	public int h(Node n) {
 		// throw new NotImplementedException();
 		// compare columns away
-		Stack<Pair<char,Integer>> goals = new Stack<Pair<char,Integer>>();
-		ArrayList<Pair<char,Integer>> boxes = new ArrayList<Pair<char,Integer>>();
+		// create stack of goal locations and arraylist of box locations in map
+		Stack<Pair<Character,Integer>> goals = new Stack<Pair<Character,Integer>>();
+		ArrayList<Pair<Character,Integer>> boxes = new ArrayList<Pair<Character,Integer>>();
 		for (int r : new Range(Node.MAX_ROW)){
 			for (int c: new Range(Node.MAX_COL)){
 				if (n.boxes[r][c] != 0){
-					boxes.add(new Pair<char,Integer>(n.boxes[r][c],c));
+					boxes.add(new Pair<Character,Integer>(n.boxes[r][c],c));
 				}
 				if (n.goals[r][c] != 0){
-					goals.push(new Pair<char,Integer>(n.goals[r][c],c));
+					goals.push(new Pair<Character,Integer>(n.goals[r][c],c));
 				}
 			}
 		}
 
 		int total = 0;
+		// matches goals with boxes, summing up the column differences between each pair
 		while (!goals.isEmpty()){
-			Pair<char,Integer> g = goals.pop();
+			Pair<Character,Integer> g = goals.pop();
 			char c = g.first;
 			int col = g.second;
 
-			for (Pair<char,Integer> box: boxes){
+			for (Pair<Character,Integer> box: boxes){
 				if (Character.toLowerCase(box.first) == c){
 					total+= Math.abs(box.second-col);
 					boxes.remove(box);
@@ -54,6 +56,7 @@ public abstract class Heuristic implements Comparator<Node> {
 				}
 			}
 		}
+		return total;
 	}
 
 	public abstract int f(Node n);
