@@ -1,23 +1,10 @@
 package searchclient;
 
 import java.util.Comparator;
+import java.util.Stack;
+import java.util.ArrayList;
 
 import searchclient.NotImplementedException;
-
-public class Pair<F, S> {
-    public final F first;
-    public final S second;
-
-    public Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
-    }
-
-    @Override
-    public boolean equals(Pair other){
-    	return other.first == first && other.second == second;
-    }
-}
 
 public abstract class Heuristic implements Comparator<Node> {
 	public Heuristic(Node initialState) {
@@ -30,8 +17,8 @@ public abstract class Heuristic implements Comparator<Node> {
 		// create stack of goal locations and arraylist of box locations in map
 		Stack<Pair<Character,Integer>> goals = new Stack<Pair<Character,Integer>>();
 		ArrayList<Pair<Character,Integer>> boxes = new ArrayList<Pair<Character,Integer>>();
-		for (int r : new Range(Node.MAX_ROW)){
-			for (int c: new Range(Node.MAX_COL)){
+		for (int r = 0; r < Node.MAX_ROW; r++){
+			for (int c = 0; c < Node.MAX_COL; c++){
 				if (n.boxes[r][c] != 0){
 					boxes.add(new Pair<Character,Integer>(n.boxes[r][c],c));
 				}
@@ -116,4 +103,20 @@ public abstract class Heuristic implements Comparator<Node> {
 			return "Greedy evaluation";
 		}
 	}
+
+	public static class Pair<F, S> {
+	    public final F first;
+	    public final S second;
+
+	    public Pair(F first, S second) {
+	        this.first = first;
+	        this.second = second;
+	    }
+
+	    // @Override
+	    public boolean equals(Pair other){
+	    	return other.first == first && other.second == second;
+	    }
+	}
 }
+
