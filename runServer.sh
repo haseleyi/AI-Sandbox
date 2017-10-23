@@ -16,4 +16,5 @@ then
 	java -jar server.jar -l levels/$1 -c "java searchclient.SearchClient -greedy" -g 50 -t 300
 else
 	echo "not a valid search strategy"
+	echo "please pass the level and search strategy as parameters"
 fi
