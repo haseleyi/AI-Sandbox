@@ -137,13 +137,15 @@ public abstract class Strategy {
 		}
 	}
 
-	// Ex 3: Best-first Search uses a priority queue (Java contains no implementation of a Heap data structure)
+	// Ex 3: Best-first search uses a priority queue
 	public static class StrategyBestFirst extends Strategy {
-		private ArrayDeque<Node> frontier;
+		private PriorityQueue<Node> frontier;
 		private HashSet<Node> frontierSet;
+		private Heuristic heuristic;
 
 		public StrategyBestFirst(Heuristic h) {
 			super();
+			heuristic = h;
 			frontier = new PriorityQueue<Node>(h);
 			frontierSet = new HashSet<Node>();
 		}

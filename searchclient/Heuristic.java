@@ -12,32 +12,29 @@ public abstract class Heuristic implements Comparator<Node> {
 	}
 
 	public int h(Node n) {
-		// throw new NotImplementedException();
-		// compare columns away
-		// create stack of goal locations and arraylist of box locations in map
-		Stack<Pair<Character,Integer>> goals = new Stack<Pair<Character,Integer>>();
-		ArrayList<Pair<Character,Integer>> boxes = new ArrayList<Pair<Character,Integer>>();
-		for (int r = 0; r < Node.MAX_ROW; r++){
-			for (int c = 0; c < Node.MAX_COL; c++){
-				if (n.boxes[r][c] != 0){
-					boxes.add(new Pair<Character,Integer>(n.boxes[r][c],c));
+		// Create stack of goal locations and list of box locations in map
+		Stack<Pair<Character, Integer>> goals = new Stack<Pair<Character, Integer>>();
+		ArrayList<Pair<Character, Integer>> boxes = new ArrayList<Pair<Character, Integer>>();
+		for (int r = 0; r < Node.MAX_ROW; r++) {
+			for (int c = 0; c < Node.MAX_COL; c++) {
+				if (n.boxes[r][c] != 0) {
+					boxes.add(new Pair<Character, Integer>(n.boxes[r][c], c));
 				}
-				if (n.goals[r][c] != 0){
-					goals.push(new Pair<Character,Integer>(n.goals[r][c],c));
+				if (n.goals[r][c] != 0) {
+					goals.push(new Pair<Character, Integer>(n.goals[r][c], c));
 				}
 			}
 		}
 
+		// Match each goal with a box, sum up the column distances for each match
 		int total = 0;
-		// matches goals with boxes, summing up the column differences between each pair
-		while (!goals.isEmpty()){
-			Pair<Character,Integer> g = goals.pop();
+		while (!goals.isEmpty()) {
+			Pair<Character, Integer> g = goals.pop();
 			char c = g.first;
 			int col = g.second;
-
-			for (Pair<Character,Integer> box: boxes){
-				if (Character.toLowerCase(box.first) == c){
-					total+= Math.abs(box.second-col);
+			for (Pair<Character, Integer> box : boxes) {
+				if (Character.toLowerCase(box.first) == c) {
+					total += Math.abs(box.second - col);
 					boxes.remove(box);
 					break;
 				}
@@ -114,7 +111,7 @@ public abstract class Heuristic implements Comparator<Node> {
 	    }
 
 	    // @Override
-	    public boolean equals(Pair other){
+	    public boolean equals(Pair other) {
 	    	return other.first == first && other.second == second;
 	    }
 	}
