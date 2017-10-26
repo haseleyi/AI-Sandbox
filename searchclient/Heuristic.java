@@ -1,37 +1,44 @@
 package searchclient;
 
 import java.util.Comparator;
-import java.util.Stack;
 import java.util.ArrayList;
 
 import searchclient.NotImplementedException;
 
 public abstract class Heuristic implements Comparator<Node> {
+	
+	private ArrayList<Pair<Character, Integer>> goals;
+
 	public Heuristic(Node initialState) {
-		// Here's a chance to pre-process the static parts of the level.
+		// Store locations of all goals
+		// This information does not change, so running these loops once in our constructor suffices
+		this.goals = new ArrayList<Pair<Character, Integer>>();
+		for (int r = 0; r < Node.MAX_ROW; r++) {
+			for (int c = 0; c < Node.MAX_COL; c++) {
+				if (Node.goals[r][c] != 0) {
+					this.goals.add(new Pair<Character, Integer>(Node.goals[r][c], c));
+				}
+			}
+		}
 	}
 
-	public int h(Node n) {
-		// Create stack of goal locations and list of box locations in map
-		Stack<Pair<Character, Integer>> goals = new Stack<Pair<Character, Integer>>();
+	public int h(Node n) {		
+
+		// Store locations of all boxes
 		ArrayList<Pair<Character, Integer>> boxes = new ArrayList<Pair<Character, Integer>>();
 		for (int r = 0; r < Node.MAX_ROW; r++) {
 			for (int c = 0; c < Node.MAX_COL; c++) {
 				if (n.boxes[r][c] != 0) {
 					boxes.add(new Pair<Character, Integer>(n.boxes[r][c], c));
 				}
-				if (n.goals[r][c] != 0) {
-					goals.push(new Pair<Character, Integer>(n.goals[r][c], c));
-				}
 			}
 		}
 
 		// Match each goal with a box, sum up the column distances for each match
 		int total = 0;
-		while (!goals.isEmpty()) {
-			Pair<Character, Integer> g = goals.pop();
-			char c = g.first;
-			int col = g.second;
+		for (Pair<Character, Integer> goal : this.goals) {
+			char c = goal.first;
+			int col = goal.second;
 			for (Pair<Character, Integer> box : boxes) {
 				if (Character.toLowerCase(box.first) == c) {
 					total += Math.abs(box.second - col);
