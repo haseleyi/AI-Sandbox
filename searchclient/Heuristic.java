@@ -7,16 +7,16 @@ import searchclient.NotImplementedException;
 
 public abstract class Heuristic implements Comparator<Node> {
 	
-	private ArrayList<Pair<Character, Integer>> goals;
+	private ArrayList<Triple<Character, Integer, Integer>> goals;
 
 	public Heuristic(Node initialState) {
 		// Store locations of all goals
 		// This information does not change, so running these loops once in our constructor suffices
-		this.goals = new ArrayList<Pair<Character, Integer>>();
+		this.goals = new ArrayList<Triple<Character, Integer, Integer>>();
 		for (int r = 0; r < Node.MAX_ROW; r++) {
 			for (int c = 0; c < Node.MAX_COL; c++) {
 				if (Node.goals[r][c] != 0) {
-					this.goals.add(new Pair<Character, Integer>(Node.goals[r][c], c));
+					this.goals.add(new Triple<Character, Integer, Integer>(Node.goals[r][c], c, r));
 				}
 			}
 		}
@@ -25,23 +25,24 @@ public abstract class Heuristic implements Comparator<Node> {
 	public int h(Node n) {		
 
 		// Store locations of all boxes
-		ArrayList<Pair<Character, Integer>> boxes = new ArrayList<Pair<Character, Integer>>();
+		ArrayList<Triple<Character, Integer, Integer>> boxes = new ArrayList<Triple<Character, Integer, Integer>>();
 		for (int r = 0; r < Node.MAX_ROW; r++) {
 			for (int c = 0; c < Node.MAX_COL; c++) {
 				if (n.boxes[r][c] != 0) {
-					boxes.add(new Pair<Character, Integer>(n.boxes[r][c], c));
+					boxes.add(new Triple<Character, Integer, Integer>(n.boxes[r][c], c, r));
 				}
 			}
 		}
 
 		// Match each goal with a box, sum up the column distances for each match
 		int total = 0;
-		for (Pair<Character, Integer> goal : this.goals) {
+		for (Triple<Character, Integer, Integer> goal : this.goals) {
 			char c = goal.first;
 			int col = goal.second;
-			for (Pair<Character, Integer> box : boxes) {
+			int row = goal.third;
+			for (Triple<Character, Integer, Integer> box : boxes) {
 				if (Character.toLowerCase(box.first) == c) {
-					total += Math.abs(box.second - col);
+					total += Math.abs(box.second - col) + Math.abs(box.third - row);
 					boxes.remove(box);
 					break;
 				}
@@ -108,18 +109,20 @@ public abstract class Heuristic implements Comparator<Node> {
 		}
 	}
 
-	public static class Pair<F, S> {
+	public static class Triple<F, S, T> {
 	    public final F first;
 	    public final S second;
+	    public final T third;
 
-	    public Pair(F first, S second) {
+	    public Triple(F first, S second, T third) {
 	        this.first = first;
 	        this.second = second;
+	        this.third = third;
 	    }
 
 	    // @Override
-	    public boolean equals(Pair other) {
-	    	return other.first == first && other.second == second;
+	    public boolean equals(Triple other) {
+	    	return other.first == first && other.second == second && other.third == third;
 	    }
 	}
 }
